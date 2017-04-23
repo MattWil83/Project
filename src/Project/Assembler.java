@@ -20,7 +20,7 @@ public class Assembler {
 				while(inp.hasNextLine()){
 					data.add(inp.nextLine());
 				}
-				}
+			}
 		} catch (FileNotFoundException e) { 
 			errors.add(0, "Error: Unable to open the input file"); 
 			return;}
@@ -56,7 +56,7 @@ public class Assembler {
 		}
 
 	}
-	
+
 	public static void main(String[] args) {
 		ArrayList<String> errors = new ArrayList<>();
 		assemble(new File("in.pasm.txt"), new File("out.pexe"), errors);		
