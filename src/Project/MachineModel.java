@@ -111,7 +111,10 @@ public class MachineModel {
 				cpu.incrPC();}});
 		//NOT
 		IMAP.put(0x8, (arg,level) -> {
-
+			if(level != 0){
+				throw new IllegalArgumentException(
+						"Illegal indirectionlevel in NOT instruction");
+			}
 			if(cpu.getAccum() == 0){
 				cpu.setAccum(1);}
 			else {
@@ -155,9 +158,9 @@ public class MachineModel {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in JUMP instruction");}
 			if(level > 2){
-				//ABSOLUTE MODE (done in later part)
-			}
-			if(level > 0){
+				int arg1 = memory.getData(cpu.getMemBase()+arg);
+				cpu.setpCounter(arg1 + currentJob.getStartcodeIndex());
+			} else if(level > 0){
 				IMAP.get(0xB).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
 			else{
@@ -169,7 +172,12 @@ public class MachineModel {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in JMPZ instruction");}
 			if(level > 2){
-				//ABSOLUTE MODE
+				if(cpu.getAccum()==0){
+					int arg1 = memory.getData(cpu.getMemBase()+arg);
+					cpu.setpCounter(arg1 + currentJob.getStartcodeIndex());}
+				else{
+					cpu.incrPC();
+				}
 			}
 			else if(level > 0){
 				IMAP.get(0xC).execute(memory.getData(cpu.getMemBase()+arg), level-1);
@@ -246,6 +254,8 @@ public class MachineModel {
 	public Job getCurrentJob() {
 		return currentJob;
 	}
+	
+	
 
 	public void changeToJob(int i){
 		if(i<0 || i>3) {
