@@ -5,15 +5,30 @@ import java.util.TreeMap;
 
 public class MachineModel {
 
+
 	public final Map<Integer, Instruction> IMAP=new TreeMap<>();
 	private CPU cpu=new CPU();
 	private Memory memory=new Memory();
 	private HaltCallback callback;
 	private Code Code = new Code();
-	
+	private Job[] jobs = new Job[4];
+	private Job currentJob;
 	
 	public MachineModel(HaltCallback callback) {
 		this.callback = callback;
+		
+		jobs[0] = new Job();
+		jobs[1] = new Job();
+		jobs[2] = new Job();
+		jobs[3] = new Job();
+		
+		currentJob = jobs[0];
+		
+		for(int i=0; i<jobs.length; i++){
+			jobs[i].setId(i);
+			jobs[i].setStartcodeIndex(i*Code.CODE_MAX/4);
+			jobs[i].setStartmemoryIndex(i*Memory.DATA_SIZE/4);
+		}
 
 		//NOP
 		IMAP.put(0x0, (arg,level) -> {
@@ -175,6 +190,10 @@ public class MachineModel {
 	public Memory getMemory() {
 		return memory;}
 	
+	public int[] getData() {
+		return memory.getData();
+	}
+	
 	public int getAccum() {
 		return cpu.getAccum();}
 	
@@ -193,9 +212,21 @@ public class MachineModel {
 	public void setMemBase(int memBase) {
 		cpu.setMemBase(memBase);}
 	
-	public Instruction get(int instrNum){
-		return IMAP.get(instrNum);}
+	public int getChangedIndex() {
+		return memory.getChangedIndex();
+	}
+
+	public Instruction get(int key){
+		return IMAP.get(key);}
 	
+	public States getCurrentState() {
+		return currentJob.getCurrentState();
+	}
+	
+	public void setCurrentState(States currentState) {
+		currentJob.setCurrentState(currentState);
+	}
+
 	public Map<Integer, Instruction> getIMAP() {
 		return IMAP;}
 
@@ -211,7 +242,23 @@ public class MachineModel {
 	 public void setData(int index, int value){
 		 memory.setData(index, value);}
 
+	public Job getCurrentJob() {
+		return currentJob;
+	}
 
+	public void changeToJob(int i){
+		if(i<0 || i>3) {
+			throw new IllegalArgumentException("illegal argument for changing jobs");
+		}
+		if(i!=currentJob.getId()){
+			currentJob.setCurrentAcc(cpu.getAccum());
+			currentJob.setCurrentPC(cpu.getpCounter());
+			currentJob = jobs[i];
+			cpu.setAccum(currentJob.getCurrentAcc());
+			cpu.setpCounter(currentJob.getCurrentPC());
+			cpu.setMemBase(currentJob.getStartmemoryIndex());
+		}
+	}
 
 	 
 	 
