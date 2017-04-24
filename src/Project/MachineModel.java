@@ -13,17 +13,17 @@ public class MachineModel {
 	private Code Code = new Code();
 	private Job[] jobs = new Job[4];
 	private Job currentJob;
-	
+
 	public MachineModel(HaltCallback callback) {
 		this.callback = callback;
-		
+
 		jobs[0] = new Job();
 		jobs[1] = new Job();
 		jobs[2] = new Job();
 		jobs[3] = new Job();
-		
+
 		currentJob = jobs[0];
-		
+
 		for(int i=0; i<jobs.length; i++){
 			jobs[i].setId(i);
 			jobs[i].setStartcodeIndex(i*Code.CODE_MAX/4);
@@ -32,7 +32,7 @@ public class MachineModel {
 
 		//NOP
 		IMAP.put(0x0, (arg,level) -> {
-				cpu.incrPC();});
+			cpu.incrPC();});
 
 		//LOD
 		IMAP.put(0x1, (arg,level) -> {
@@ -49,11 +49,11 @@ public class MachineModel {
 			if(level < 1 || level > 2) {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in STO instruction");}
-			if (level == 1) {
-				memory.setData(arg, cpu.getAccum());
-				cpu.incrPC();}
-			else {
-				IMAP.get(0x2).execute(memory.getData(cpu.getMemBase()+arg), level-1);}});
+			if (level > 1) {
+				IMAP.get(0x2).execute(memory.getData(cpu.getMemBase()+arg), level-1);
+			} else{
+				memory.setData(cpu.getMemBase()+arg, cpu.getAccum());
+				cpu.incrPC();}});
 		//ADD
 		IMAP.put(0x3, (arg, level) ->{
 			if(level < 0 || level > 2) {
@@ -111,7 +111,7 @@ public class MachineModel {
 				cpu.incrPC();}});
 		//NOT
 		IMAP.put(0x8, (arg,level) -> {
-			
+
 			if(cpu.getAccum() == 0){
 				cpu.setAccum(1);}
 			else {
@@ -133,7 +133,7 @@ public class MachineModel {
 				cpu.incrPC();}
 		});
 
-        //CMPL
+		//CMPL
 		IMAP.put(0x9, (arg,level) -> {
 			if(level < 1 || level > 2) {
 				throw new IllegalArgumentException(
@@ -157,7 +157,7 @@ public class MachineModel {
 			if(level > 2){
 				//ABSOLUTE MODE (done in later part)
 			}
-			if(level > 1){
+			if(level > 0){
 				IMAP.get(0xB).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
 			else{
@@ -187,43 +187,43 @@ public class MachineModel {
 
 	public MachineModel() {
 		this(() -> System.exit(0));}
-	
+
 	public Memory getMemory() {
 		return memory;}
-	
+
 	public int[] getData() {
 		return memory.getData();
 	}
-	
+
 	public int getAccum() {
 		return cpu.getAccum();}
-	
+
 	public int getpCounter() {
 		return cpu.getpCounter();}
-	
+
 	public int getMemBase() {
 		return cpu.getMemBase();}
-	
+
 	public void setAccum(int accum) {
 		cpu.setAccum(accum);}
-	
+
 	public void setpCounter(int pCounter) {
 		cpu.setpCounter(pCounter);}
-	
+
 	public void setMemBase(int memBase) {
 		cpu.setMemBase(memBase);}
-	
+
 	public int getChangedIndex() {
 		return memory.getChangedIndex();
 	}
 
 	public Instruction get(int key){
 		return IMAP.get(key);}
-	
+
 	public States getCurrentState() {
 		return currentJob.getCurrentState();
 	}
-	
+
 	public void setCurrentState(States currentState) {
 		currentJob.setCurrentState(currentState);
 	}
@@ -231,17 +231,17 @@ public class MachineModel {
 	public Map<Integer, Instruction> getIMAP() {
 		return IMAP;}
 
-	 public void setCode(int index, int op, int indirLvl, int arg){
-		 Code.setCode(index, op, indirLvl, arg);} 
-	 
-	 public Code getCode(){
-		 return Code;}
+	public void setCode(int index, int op, int indirLvl, int arg){
+		Code.setCode(index, op, indirLvl, arg);} 
 
-	 public int getData(int index){
-		 return memory.getData(index);}
-	
-	 public void setData(int index, int value){
-		 memory.setData(index, value);}
+	public Code getCode(){
+		return Code;}
+
+	public int getData(int index){
+		return memory.getData(index);}
+
+	public void setData(int index, int value){
+		memory.setData(index, value);}
 
 	public Job getCurrentJob() {
 		return currentJob;
@@ -261,10 +261,10 @@ public class MachineModel {
 		}
 	}
 
-	 
-	 
-	 
-	 
+
+
+
+
 }
 
 
