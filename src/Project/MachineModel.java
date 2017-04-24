@@ -53,7 +53,7 @@ public class MachineModel {
 				memory.setData(arg, cpu.getAccum());
 				cpu.incrPC();}
 			else {
-				IMAP.get(0x2).execute(memory.getData(cpu.getMemBase()), level-1);}});
+				IMAP.get(0x2).execute(memory.getData(cpu.getMemBase()+arg), level-1);}});
 		//ADD
 		IMAP.put(0x3, (arg, level) ->{
 			if(level < 0 || level > 2) {
@@ -98,7 +98,7 @@ public class MachineModel {
 				cpu.incrPC();}});
 		//AND
 		IMAP.put(0x7, (arg,level) -> {
-			if(level < 0 || level > 1) {
+			if(level < 0 || level > 2) {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in AND instruction");}
 			if (level > 0) {
@@ -118,7 +118,7 @@ public class MachineModel {
 			cpu.incrPC();});
 		//CMPZ
 		IMAP.put(0xA, (arg,level) -> {
-			if(level != 1 || level != 2) {
+			if(level < 1 || level > 2) {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in CMPZ instruction");}
 			if(level == 2){
@@ -134,7 +134,7 @@ public class MachineModel {
 
         //CMPL
 		IMAP.put(0x9, (arg,level) -> {
-			if(level != 1 || level != 2) {
+			if(level < 1 || level > 2) {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in CMPL instruction");}
 			if(level == 2){
