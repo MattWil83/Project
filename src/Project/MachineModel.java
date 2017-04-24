@@ -40,7 +40,7 @@ public class MachineModel {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in LOD instruction");}
 			if (level > 0) {
-				IMAP.get(0x1).execute(memory.getData(cpu.getMemBase()), level-1);}
+				IMAP.get(0x1).execute(memory.getData(cpu.getMemBase()+arg), level-1);}
 			else {
 				cpu.setAccum(arg);
 				cpu.incrPC();}});
@@ -91,9 +91,9 @@ public class MachineModel {
 						"Illegal indirection level in DIV instruction");}
 			if(level > 0) {
 				IMAP.get(0x6).execute(memory.getData(cpu.getMemBase()+arg), level-1);} 
-			if(arg==0)
-				throw new DivideByZeroException("Cannot Divide By Zero");
 			else {
+				if(arg==0)
+					throw new DivideByZeroException("Cannot Divide By Zero");
 				cpu.setAccum(cpu.getAccum() / arg);
 				cpu.incrPC();}});
 		//AND
@@ -102,7 +102,7 @@ public class MachineModel {
 				throw new IllegalArgumentException(
 						"Illegal indirection level in AND instruction");}
 			if (level > 0) {
-				IMAP.get(0x7).execute(memory.getData(cpu.getMemBase()), level-1);
+				IMAP.get(0x7).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			} else {
 				if (arg != 0 && cpu.getAccum() != 0) {
 					cpu.setAccum(1);}
@@ -111,6 +111,7 @@ public class MachineModel {
 				cpu.incrPC();}});
 		//NOT
 		IMAP.put(0x8, (arg,level) -> {
+			
 			if(cpu.getAccum() == 0){
 				cpu.setAccum(1);}
 			else {
@@ -166,11 +167,11 @@ public class MachineModel {
 		IMAP.put(0xC, (arg,level) -> {
 			if(level < 0 || level > 3) {
 				throw new IllegalArgumentException(
-						"Illegal indirection level in JUMP instruction");}
+						"Illegal indirection level in JMPZ instruction");}
 			if(level > 2){
 				//ABSOLUTE MODE
 			}
-			else if(level > 1){
+			else if(level > 0){
 				IMAP.get(0xC).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
 			else{

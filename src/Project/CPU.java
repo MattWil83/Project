@@ -24,7 +24,7 @@ public class CPU {
 	}
 	 
 	public void incrPC(){
-		this.pCounter=pCounter++;
+		pCounter++;
 	}
 	 
 }
