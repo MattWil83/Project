@@ -14,13 +14,13 @@ public class GUIMediator {
 	public void setModel(MachineModel model) {
 		this.model = model;
 	}
-	JFrame getFrame(){
+	public JFrame getFrame(){
 		return null;
 	}
-	void clearJobs(){
+	public void clearJob(){
 		
 	}
-	void makeReady(String s){
+	public void makeReady(String s){
 		
 	}
 	

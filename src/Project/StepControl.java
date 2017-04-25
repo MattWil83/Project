@@ -36,11 +36,11 @@ public class StepControl {
 		this.gui = gui;
 	}
 	
-	void toggelAutoStep(){
-		if(autoStepOn=false)
-			this.autoStepOn=true;
-		if(autoStepOn==true)
-			this.autoStepOn=false;
+	void toggleAutoStep(){
+		if(autoStepOn==false){
+			this.autoStepOn=true;}
+		else{
+			this.autoStepOn=false;}
 	}
 	
 	void setPeriod(int period){
@@ -51,6 +51,7 @@ public class StepControl {
 		timer = new Timer(TICK, e -> {if(autoStepOn) gui.step();});
 		timer.start();
 	}
+	
 	
 	
 	
