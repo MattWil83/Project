@@ -1,6 +1,27 @@
 package Project;
 
-public class GUIMediator {
+import javax.swing.JFrame;
 
-		public void step(){}
+public class GUIMediator {
+	private MachineModel model;
+	public void step(){}
+	
+	
+	
+	public MachineModel getModel() {
+		return model;
+	}
+	public void setModel(MachineModel model) {
+		this.model = model;
+	}
+	public JFrame getFrame(){
+		return null;
+	}
+	public void clearJobs(){
+		
+	}
+	public void makeReady(String s){
+		
+	}
+	
 }
