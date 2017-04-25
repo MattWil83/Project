@@ -4,9 +4,9 @@ import javax.swing.JFrame;
 
 public class GUIMediator {
 	private MachineModel model;
+	
+	
 	public void step(){}
-	
-	
 	
 	public MachineModel getModel() {
 		return model;
@@ -14,13 +14,13 @@ public class GUIMediator {
 	public void setModel(MachineModel model) {
 		this.model = model;
 	}
-	public JFrame getFrame(){
+	JFrame getFrame(){
 		return null;
 	}
-	public void clearJobs(){
+	void clearJobs(){
 		
 	}
-	public void makeReady(String s){
+	void makeReady(String s){
 		
 	}
 	
