@@ -254,8 +254,33 @@ public class MachineModel {
 	public Job getCurrentJob() {
 		return currentJob;
 	}
+
+	public void clearJob(){
+		memory.clear(currentJob.getStartmemoryIndex(), 
+				currentJob.getStartmemoryIndex()+Memory.DATA_SIZE/4);
+		Code.clear(currentJob.getStartcodeIndex(),
+				currentJob.getStartcodeIndex()+currentJob.getCodeSize());
+		cpu.setAccum(0);
+		cpu.setpCounter(currentJob.getStartcodeIndex());
+		currentJob.reset();
+	}
 	
-	
+	public void step(){
+		try{
+			int pc = cpu.getpCounter();
+			if(pc<currentJob.getStartcodeIndex() ||
+					pc>=currentJob.getStartcodeIndex()+currentJob.getCodeSize()){
+				throw new CodeAccessException("Program Counter is out of bounds");
+			}
+			int opcode = Code.getOp(pc);
+			int arg = Code.getArg(pc);
+			int indirLvl = Code.getIndirLvl(pc);			
+			get(opcode).execute(arg, indirLvl);
+		} catch(Exception e){
+			callback.halt();
+			throw e;
+		}
+	}
 
 	public void changeToJob(int i){
 		if(i<0 || i>3) {
