@@ -163,6 +163,10 @@ public class MachineModel {
 			} else if(level > 0){
 				IMAP.get(0xB).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
+			else if(level == 3){
+				int arg1 = memory.getData(cpu.getMemBase()+arg);
+				cpu.setpCounter(arg1 + currentJob.getStartcodeIndex());
+			}
 			else{
 				cpu.setpCounter(cpu.getpCounter()+arg);}});
 
@@ -182,11 +186,17 @@ public class MachineModel {
 			else if(level > 0){
 				IMAP.get(0xC).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
+			else if(level == 0){
+				int arg1 = memory.getData(cpu.getMemBase()+arg);
+				cpu.setpCounter(arg1 + currentJob.getStartcodeIndex());
+			}
 			else{
 				if(cpu.getAccum()==0){
 					cpu.setpCounter(cpu.getpCounter()+arg);}
 				else{
 					cpu.incrPC();}}});
+
+
 
 		//HALT
 		IMAP.put(0xF, (arg, level) -> {
@@ -264,7 +274,7 @@ public class MachineModel {
 		cpu.setpCounter(currentJob.getStartcodeIndex());
 		currentJob.reset();
 	}
-	
+
 	public void step(){
 		try{
 			int pc = cpu.getpCounter();
@@ -295,6 +305,7 @@ public class MachineModel {
 			cpu.setMemBase(currentJob.getStartmemoryIndex());
 		}
 	}
+
 
 
 
