@@ -67,6 +67,19 @@ public class Code {
 
 	}
 
+	String getHex(int i){
+		int a=getOp(i);
+		int b=getIndirLvl(i);
+		int c=getArg(i);
+		if(c==getArg(i)){
+		if(c<0){
+			c=0-c;
+			return Integer.toHexString(a).toUpperCase()+" "+Integer.toHexString(b).toUpperCase()+" -"+Integer.toHexString(c).toUpperCase();
+			}}
+		return Integer.toHexString(a).toUpperCase()+" "+Integer.toHexString(b).toUpperCase()+" "+Integer.toHexString(c).toUpperCase();
+		
+	}
+	
 //	public static void main(String[] args) {
 //		Code c = new Code();
 //		for(int i = 0; i <= 3; i++) {
