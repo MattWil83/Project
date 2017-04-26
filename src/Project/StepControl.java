@@ -36,14 +36,14 @@ public class StepControl {
 		this.gui = gui;
 	}
 	
-	void toggleAutoStep(){
+	public void toggleAutoStep(){
 		if(autoStepOn==false){
 			this.autoStepOn=true;}
 		else{
 			this.autoStepOn=false;}
 	}
 	
-	void setPeriod(int period){
+	public void setPeriod(int period){
 		timer.setDelay(period);
 	}
 	
