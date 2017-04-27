@@ -1,15 +1,59 @@
 package Project;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.Observable;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class GUIMediator extends Observable{
 	private MachineModel model;
 	private FilesMgr filesMgr;
 	private StepControl stepControl;
 	private JFrame frame;
+	
+	private CodeViewPanel codeViewPanel;
+	private MemoryViewPanel memoryViewPanel1;
+	private MemoryViewPanel memoryViewPanel2;
+	private MemoryViewPanel memoryViewPanel3;
+	//private ControlPanel controlPanel; // Project Part 1?
+	//private ProcessorViewPanel processorPanel; // Project Part 1?
+	//private MenuBarBuilder menuBuilder; // Project Part 12
+
+	private void createAndShowGUI(){
+		setStepControl(new StepControl(this));
+		setFilesMgr(new FilesMgr(this));
+		filesMgr.initialize();
+		setCodeViewPanel(new CodeViewPanel(this, model));
+		setMemoryViewPanel1(new MemoryViewPanel(this, model, 0, 240));
+		setMemoryViewPanel2(new MemoryViewPanel(this, model, 240, Memory.DATA_SIZE/2));
+		setMemoryViewPanel3(new MemoryViewPanel(this, model, Memory.DATA_SIZE/2, Memory.DATA_SIZE));
+		//setControlPanel(new ControlPanel(this));
+		//setProcessorPanel(new ProcessorViewPanel(this, model));
+		//setMenuBuilder(new MenuBuilder(this));
+		setFrame(new JFrame("Simulator"));
+		Container content = frame.getContentPane();
+		content.setLayout(new BorderLayout(1,1));
+		content.setBackground(Color.BLACK);
+		content.setSize(new Dimension(1200, 600));
+		JPanel center = new JPanel();
+		center.setLayout(new GridLayout(1,3));
+		frame.add(codeViewPanel.createCodeDisplay(), BorderLayout.LINE_START);
+		center.add(memoryViewPanel1.createMemoryDisplay());
+		center.add(memoryViewPanel2.createMemoryDisplay());
+		center.add(memoryViewPanel3.createMemoryDisplay());
+		//center.setLayout(new BorderLayout(1,3));
+		frame.add(center, BorderLayout.CENTER);
+		//return HERE for other GUI components
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// return HERE for other setup details
+		frame.setVisible(true);
+	}
 
 
 	public void step(){
@@ -117,6 +161,43 @@ public class GUIMediator extends Observable{
 	public States getCurrentState(){
 		return model.getCurrentState();
 	}
+	
+	public void setStepControl(StepControl stepControl) {
+		this.stepControl = stepControl;
+	}
+	
+
+
+	private void setFrame(JFrame jFrame) {
+		this.frame = jFrame;
+		
+	}
+
+
+	public void setMemoryViewPanel1(MemoryViewPanel memoryViewPanel1) {
+		this.memoryViewPanel1 = memoryViewPanel1;
+	}
+
+
+	public void setMemoryViewPanel2(MemoryViewPanel memoryViewPanel2) {
+		this.memoryViewPanel2 = memoryViewPanel2;
+	}
+
+
+	public void setMemoryViewPanel3(MemoryViewPanel memoryViewPanel3) {
+		this.memoryViewPanel3 = memoryViewPanel3;
+	}
+
+
+	public void setCodeViewPanel(CodeViewPanel codeViewPanel) {
+		this.codeViewPanel = codeViewPanel;
+	}
+
+
+	public void setFilesMgr(FilesMgr filesMgr) {
+		this.filesMgr = filesMgr;
+	}
+
 
 	public void setCurrentState(States s){
 		if(s==States.PROGRAM_HALTED){
@@ -191,6 +272,20 @@ public class GUIMediator extends Observable{
 
 	public void loadFile() {
 		filesMgr.loadFile(model.getCurrentJob());
+	}
+	
+	public static void main(String[] args) {
+	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+	        public void run() {
+	            GUIMediator organizer = new GUIMediator();
+	            MachineModel model = new MachineModel(
+	            //() 
+	            //-> organizer.setCurrentState(States.PROGRAM_HALTED)
+	            );
+	            organizer.setModel(model);
+	            organizer.createAndShowGUI();
+	        }
+	    });
 	}
 	
 
