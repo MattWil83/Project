@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.Observable;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -16,6 +17,7 @@ public class GUIMediator extends Observable{
 	private FilesMgr filesMgr;
 	private StepControl stepControl;
 	private JFrame frame;
+	JMenuBar bar = new JMenuBar();
 	
 	private CodeViewPanel codeViewPanel;
 	private MemoryViewPanel memoryViewPanel1;
@@ -23,7 +25,7 @@ public class GUIMediator extends Observable{
 	private MemoryViewPanel memoryViewPanel3;
 	//private ControlPanel controlPanel; // Project Part 1?
 	//private ProcessorViewPanel processorPanel; // Project Part 1?
-	//private MenuBarBuilder menuBuilder; // Project Part 12
+	private MenuBarBuilder menuBuilder; // Project Part 12
 
 	private void createAndShowGUI(){
 		setStepControl(new StepControl(this));
@@ -35,24 +37,27 @@ public class GUIMediator extends Observable{
 		setMemoryViewPanel3(new MemoryViewPanel(this, model, Memory.DATA_SIZE/2, Memory.DATA_SIZE));
 		//setControlPanel(new ControlPanel(this));
 		//setProcessorPanel(new ProcessorViewPanel(this, model));
-		//setMenuBuilder(new MenuBuilder(this));
+		setMenuBuilder(new MenuBuilder(this));
 		setFrame(new JFrame("Simulator"));
+		
 		Container content = frame.getContentPane();
 		content.setLayout(new BorderLayout(1,1));
 		content.setBackground(Color.BLACK);
 		content.setSize(new Dimension(1200, 600));
+		
 		JPanel center = new JPanel();
 		center.setLayout(new GridLayout(1,3));
 		frame.add(codeViewPanel.createCodeDisplay(), BorderLayout.LINE_START);
 		center.add(memoryViewPanel1.createMemoryDisplay());
 		center.add(memoryViewPanel2.createMemoryDisplay());
 		center.add(memoryViewPanel3.createMemoryDisplay());
-		//center.setLayout(new BorderLayout(1,3));
 		frame.add(center, BorderLayout.CENTER);
+		
 		//return HERE for other GUI components
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// return HERE for other setup details
 		frame.setVisible(true);
+
 	}
 
 
@@ -170,6 +175,10 @@ public class GUIMediator extends Observable{
 
 	private void setFrame(JFrame jFrame) {
 		this.frame = jFrame;
+		frame.setJMenuBar(bar);
+		bar.add(menuBuilder.createFileMenu());
+		bar.add(menuBuilder.createExecuteMenu());
+		bar.add(menuBuilder.createJobsMenu());
 		
 	}
 
@@ -279,8 +288,8 @@ public class GUIMediator extends Observable{
 	        public void run() {
 	            GUIMediator organizer = new GUIMediator();
 	            MachineModel model = new MachineModel(
-	            //() 
-	            //-> organizer.setCurrentState(States.PROGRAM_HALTED)
+	            () 
+	            -> organizer.setCurrentState(States.PROGRAM_HALTED)
 	            );
 	            organizer.setModel(model);
 	            organizer.createAndShowGUI();
