@@ -1,0 +1,4 @@
+#File locations
+#Thu Apr 27 16:37:13 EDT 2017
+ExecutableDirectory=C\:/Users/Matt Wilomovsky/Documents/cs140/project 2/
+SourceDirectory=C\:/Users/Matt Wilomovsky/Documents/cs140/project 2/
