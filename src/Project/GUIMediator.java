@@ -18,12 +18,12 @@ public class GUIMediator extends Observable{
 	private StepControl stepControl;
 	private JFrame frame;
 	JMenuBar bar = new JMenuBar();
-	
+
 	private CodeViewPanel codeViewPanel;
 	private MemoryViewPanel memoryViewPanel1;
 	private MemoryViewPanel memoryViewPanel2;
 	private MemoryViewPanel memoryViewPanel3;
-	//private ControlPanel controlPanel; // Project Part 1?
+	private ControlPanel controlPanel;
 	//private ProcessorViewPanel processorPanel; // Project Part 1?
 	private MenuBarBuilder menuBuilder; // Project Part 12
 
@@ -35,16 +35,16 @@ public class GUIMediator extends Observable{
 		setMemoryViewPanel1(new MemoryViewPanel(this, model, 0, 240));
 		setMemoryViewPanel2(new MemoryViewPanel(this, model, 240, Memory.DATA_SIZE/2));
 		setMemoryViewPanel3(new MemoryViewPanel(this, model, Memory.DATA_SIZE/2, Memory.DATA_SIZE));
-		//setControlPanel(new ControlPanel(this));
+		controlPanel=new ControlPanel(this);
 		//setProcessorPanel(new ProcessorViewPanel(this, model));
-		setMenuBuilder(new MenuBuilder(this));
+		menuBuilder=new MenuBarBuilder(this);
 		setFrame(new JFrame("Simulator"));
-		
+
 		Container content = frame.getContentPane();
 		content.setLayout(new BorderLayout(1,1));
 		content.setBackground(Color.BLACK);
 		content.setSize(new Dimension(1200, 600));
-		
+
 		JPanel center = new JPanel();
 		center.setLayout(new GridLayout(1,3));
 		frame.add(codeViewPanel.createCodeDisplay(), BorderLayout.LINE_START);
@@ -53,6 +53,8 @@ public class GUIMediator extends Observable{
 		center.add(memoryViewPanel3.createMemoryDisplay());
 		frame.add(center, BorderLayout.CENTER);
 		
+		frame.add(controlPanel.createControlDisplay(),BorderLayout.PAGE_END);
+
 		//return HERE for other GUI components
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// return HERE for other setup details
@@ -70,43 +72,43 @@ public class GUIMediator extends Observable{
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code from line " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Run time error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Run time error",
+								JOptionPane.OK_OPTION);
 			} catch (ArrayIndexOutOfBoundsException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to data" + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Run time error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Run time error",
+								JOptionPane.OK_OPTION);
 			} catch (NullPointerException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"NullPointerException",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"NullPointerException",
+								JOptionPane.OK_OPTION);
 			} catch (IllegalArgumentException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Program error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Program error",
+								JOptionPane.OK_OPTION);
 			} catch (DivideByZeroException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Divide by zero error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Divide by zero error",
+								JOptionPane.OK_OPTION);
 			}
 			setChanged();
 			notifyObservers();
 		}
 	}
-	
+
 	public void execute(){
 		while(model.getCurrentState()!=States.PROGRAM_HALTED &&
 				model.getCurrentState()!=States.NOTHING_LOADED){
@@ -116,37 +118,37 @@ public class GUIMediator extends Observable{
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code from line " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Run time error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Run time error",
+								JOptionPane.OK_OPTION);
 			} catch (ArrayIndexOutOfBoundsException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to data" + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Run time error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Run time error",
+								JOptionPane.OK_OPTION);
 			} catch (NullPointerException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"NullPointerException",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"NullPointerException",
+								JOptionPane.OK_OPTION);
 			} catch (IllegalArgumentException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Program error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Program error",
+								JOptionPane.OK_OPTION);
 			} catch (DivideByZeroException e){
 				JOptionPane.showMessageDialog(
 						frame, 
 						"Illegal access to code " + model.getpCounter() + "\n"
-						+ "Exception message: " + e.getMessage(),
-						"Divide by zero error",
-						JOptionPane.OK_OPTION);
+								+ "Exception message: " + e.getMessage(),
+								"Divide by zero error",
+								JOptionPane.OK_OPTION);
 			}
 		}
 		setChanged();
@@ -166,11 +168,11 @@ public class GUIMediator extends Observable{
 	public States getCurrentState(){
 		return model.getCurrentState();
 	}
-	
+
 	public void setStepControl(StepControl stepControl) {
 		this.stepControl = stepControl;
 	}
-	
+
 
 
 	private void setFrame(JFrame jFrame) {
@@ -179,7 +181,7 @@ public class GUIMediator extends Observable{
 		bar.add(menuBuilder.createFileMenu());
 		bar.add(menuBuilder.createExecuteMenu());
 		bar.add(menuBuilder.createJobsMenu());
-		
+
 	}
 
 
@@ -282,20 +284,20 @@ public class GUIMediator extends Observable{
 	public void loadFile() {
 		filesMgr.loadFile(model.getCurrentJob());
 	}
-	
+
 	public static void main(String[] args) {
-	    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-	        public void run() {
-	            GUIMediator organizer = new GUIMediator();
-	            MachineModel model = new MachineModel(
-	            () 
-	            -> organizer.setCurrentState(States.PROGRAM_HALTED)
-	            );
-	            organizer.setModel(model);
-	            organizer.createAndShowGUI();
-	        }
-	    });
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				GUIMediator organizer = new GUIMediator();
+				MachineModel model = new MachineModel(
+						() 
+						-> organizer.setCurrentState(States.PROGRAM_HALTED)
+						);
+				organizer.setModel(model);
+				organizer.createAndShowGUI();
+			}
+		});
 	}
-	
+
 
 }

@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
 public class MenuBarBuilder implements Observer {
-	
+
 	private JMenuItem assemble = new JMenuItem("Assemble Source...");
 	private JMenuItem load = new JMenuItem("Load Program...");
 	private JMenuItem exit = new JMenuItem("Exit");
@@ -25,7 +25,7 @@ public class MenuBarBuilder implements Observer {
 		gui = gm;
 		gui.addObserver(this);
 	}
-	
+
 	public JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
@@ -40,7 +40,7 @@ public class MenuBarBuilder implements Observer {
 				KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 		load.addActionListener(e -> gui.loadFile());
 		menu.add(load);
-		
+
 		menu.addSeparator();
 
 		exit.setMnemonic(KeyEvent.VK_E);
@@ -48,11 +48,11 @@ public class MenuBarBuilder implements Observer {
 				KeyEvent.VK_E, ActionEvent.CTRL_MASK));
 		exit.addActionListener(e -> gui.exit());
 		menu.add(exit);
-		
+
 		return menu;
-		
+
 	}
-	
+
 	public JMenu createExecuteMenu(){
 		JMenu menu = new JMenu("Execute");
 		menu.setMnemonic(KeyEvent.VK_X);
@@ -61,10 +61,10 @@ public class MenuBarBuilder implements Observer {
 				KeyEvent.VK_G, ActionEvent.CTRL_MASK));
 		go.addActionListener(e -> gui.execute());
 		menu.add(go);
-		
+
 		return menu;
 	}
-	
+
 	public JMenu createJobsMenu(){
 		JMenu menu = new JMenu("Change Job");
 		menu.setMnemonic(KeyEvent.VK_J);
@@ -79,24 +79,24 @@ public class MenuBarBuilder implements Observer {
 				KeyEvent.VK_1, ActionEvent.CTRL_MASK));
 		job1.addActionListener(e -> gui.changeToJob(1));
 		menu.add(job1);
-		
+
 		job2.setMnemonic(KeyEvent.VK_2);
 		job2.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_2, ActionEvent.CTRL_MASK));
 		job2.addActionListener(e -> gui.changeToJob(2));
 		menu.add(job2);
-		
+
 		job3.setMnemonic(KeyEvent.VK_3);
 		job3.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_3, ActionEvent.CTRL_MASK));
 		job3.addActionListener(e -> gui.changeToJob(3));
 		menu.add(job3);
-		
+
 		return menu;
-		
+
 	}
-	
-	
+
+
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
