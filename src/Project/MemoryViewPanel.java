@@ -8,8 +8,6 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import javafx.scene.layout.Border;
-
 public class MemoryViewPanel implements Observer{
 
 	private MachineModel model;
