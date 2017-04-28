@@ -26,7 +26,8 @@ public class Assembler2 {
 					inText.get(i+1).trim().length() > 0){
 				errors.add("Error: line " + i + " is a blank line");
 			}
-			if(inText.get(i).charAt(0)==' ' || inText.get(i).charAt(0)=='\t'){
+			if(inText.get(i).length()>1 && (inText.get(i).charAt(0)==' ' || 
+					inText.get(i).charAt(0)=='\t')){
 				errors.add("Error: line " + i + " starts with white space");
 			}
 			if(inText.get(i).trim().toUpperCase().startsWith("--") 
@@ -71,13 +72,13 @@ public class Assembler2 {
 					}
 				}
 			}
-			int arg = 0; 
+			int arg; 
 			try {
 				arg = Integer.parseInt(parts[1],16);
 			} catch (NumberFormatException e) {
 				errors.add("Error: line " + lineNum 
 						+ " does not have a numeric argument");
-			}
+			} 
 			//------------PUT OTHER ERRORS HERE (IF ANY)-----------
 			int lvl=0;
 			if(parts.length==2){
