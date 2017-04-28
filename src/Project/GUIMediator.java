@@ -23,7 +23,7 @@ public class GUIMediator extends Observable{
 	private MemoryViewPanel memoryViewPanel1;
 	private MemoryViewPanel memoryViewPanel2;
 	private MemoryViewPanel memoryViewPanel3;
-	private ControlPanel controlPanel; // Project Part 1?
+	private ControlPanel controlPanel;
 	//private ProcessorViewPanel processorPanel; // Project Part 1?
 	private MenuBarBuilder menuBuilder; // Project Part 12
 
@@ -35,7 +35,7 @@ public class GUIMediator extends Observable{
 		setMemoryViewPanel1(new MemoryViewPanel(this, model, 0, 240));
 		setMemoryViewPanel2(new MemoryViewPanel(this, model, 240, Memory.DATA_SIZE/2));
 		setMemoryViewPanel3(new MemoryViewPanel(this, model, Memory.DATA_SIZE/2, Memory.DATA_SIZE));
-		setcontrolPanel(new ControlPanel(this));
+		controlPanel=new ControlPanel(this);
 		//setProcessorPanel(new ProcessorViewPanel(this, model));
 		menuBuilder=new MenuBarBuilder(this);
 		setFrame(new JFrame("Simulator"));
