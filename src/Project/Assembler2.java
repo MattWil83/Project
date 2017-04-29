@@ -23,27 +23,30 @@ public class Assembler2 {
 		} catch (FileNotFoundException e) { 
 			errors.add(0, "Error: Unable to open the input file"); 
 			return;}
-		
+
 		//to remove blank lines at the end of a file:
 		int ix = inText.size()-1;
 		while(ix>0 && inText.get(ix).trim().length()==0){
 			inText.remove(ix);
 			ix--;
 		}
-
-		for(int i=0; i<inText.size(); i++){
-			if(inText.get(i).trim().length()==0 && i+1<inText.size() &&
-					inText.get(i+1).trim().length() > 0){
-				errors.add("Error: line " + i + " is a blank line");
+		int idx=0;
+		while(idx<inText.size()){
+			if(inText.get(idx).trim().length()==0 && idx+1<inText.size()){
+				errors.add("Error: line " + (idx+1) + " Illegal blank line in the source file");
+				while(idx+1<inText.size() && inText.get(idx+1).trim().length()==0){
+					idx++;
+				}
 			}
-			if(inText.get(i).length()>1 && (inText.get(i).charAt(0)==' ' || 
-					inText.get(i).charAt(0)=='\t')){
-				errors.add("Error: line " + i + " starts with white space");
+			if(inText.get(idx).length()>1 && (inText.get(idx).charAt(0)==' ' || 
+					inText.get(idx).charAt(0)=='\t')){
+				errors.add("Error: line " + (idx+1) + " Line starts with illegal white space");
 			}
-			if(inText.get(i).trim().toUpperCase().startsWith("--") 
-					&& !(inText.get(i).trim().replace("-","").length()==0)){
-				errors.add("Error: line " + i + " has a duplicate data separator");
+			if(inText.get(idx).trim().toUpperCase().startsWith("--") 
+					&& !(inText.get(idx).trim().replace("-","").length()==0)){
+				errors.add("Error: line " + (idx+1) + " has a duplicate data separator");
 			}
+			idx++;
 		}
 
 		boolean dataSection = false;
@@ -57,31 +60,33 @@ public class Assembler2 {
 			else{
 				data.add(line.trim());}
 		}
-		
+
 		ArrayList<String>outtext=new ArrayList<>();
-		
+
 		//CODE SECTION
 		for(int i=0; i<code.size(); i++){ 
 			String[] parts = code.get(i).trim().split("\\s+");
-			int lineNum = i; //they want us to "get the lineNum from inText... I'd hope that's the same as the index of code...
-			if(!InstructionMap.sourceCodes.contains(parts[0])){
+			int lineNum = i+1; //they want us to "get the lineNum from inText... I'd hope that's the same as the index of code...
+			if(!InstructionMap.sourceCodes.contains(parts[0]) && parts[0].length()>0){
 				errors.add("Error: line " + lineNum + " illegal mnemonic");
-			} else if(InstructionMap.sourceCodes.contains(parts[0].toUpperCase())
-					&& !InstructionMap.sourceCodes.contains(parts[0])){
-				errors.add("Error: line " + lineNum + " does not have the instruction mnemonic in upper case");
-			} else if(InstructionMap.noArgument.contains(parts[0]) && !(parts.length==1)){
-				errors.add("Error: line " + lineNum + " has an illegal argument");
-			} else if(!InstructionMap.noArgument.contains(parts[0])){
-				if(parts.length==1){
-					errors.add("Error: line " + lineNum + " is missing an argument");
-				} else if(parts.length>=3){
-					errors.add("Error: line " + lineNum + " has more than one argument");
-				} else if(parts.length==2){
-					if(parts[1].startsWith("[")){
-						if(!(InstructionMap.indirectOK.contains(parts[0]))){
-							errors.add("Error: line " + lineNum + " has an illegal argument for given instruction");
-						} else if(!parts[1].endsWith("]")){
-							errors.add("Error: line " + lineNum + " is missing a closing bracket");
+			} else if(InstructionMap.sourceCodes.contains(parts[0])){
+				if(InstructionMap.sourceCodes.contains(parts[0].toUpperCase())
+						&& !InstructionMap.sourceCodes.contains(parts[0])){
+					errors.add("Error: line " + lineNum + " does not have the instruction mnemonic in upper case");
+				} else if(InstructionMap.noArgument.contains(parts[0]) && !(parts.length==1)){
+					errors.add("Error: line " + lineNum + " has an illegal argument");
+				} else if(!InstructionMap.noArgument.contains(parts[0])){
+					if(parts.length==1){
+						errors.add("Error: line " + lineNum + " is missing an argument");
+					} else if(parts.length>=3){
+						errors.add("Error: line " + lineNum + " has more than one argument");
+					} else if(parts.length==2){
+						if(parts[1].startsWith("[")){
+							if(!(InstructionMap.indirectOK.contains(parts[0]))){
+								errors.add("Error: line " + lineNum + " has an illegal argument for given instruction");
+							} else if(!parts[1].endsWith("]")){
+								errors.add("Error: line " + lineNum + " is missing a closing bracket");
+							}
 						}
 					}
 				}
@@ -127,17 +132,18 @@ public class Assembler2 {
 			int lineNum = i+code.size()+1;
 			String[] parts = data.get(i).trim().split("\\s+");
 			if(parts.length!=2){
-				errors.add("Error: line " + i + " has the wrong number of arguments");
-			}
-			int arg = 0; 
+				errors.add("Error: line " + lineNum + " has the wrong number of arguments");
+			} 
 			try {
-				arg = Integer.parseInt(parts[0],16);
+				if(parts.length>1){
+					int arg = Integer.parseInt(parts[0],16);}
 			} catch (NumberFormatException e) {
 				errors.add("Error: line " + lineNum 
-						+ " does not have a numeric argument");
+						+ " data address is not a hex number");
 			}
 			try {
-				arg = Integer.parseInt(parts[1],16);
+				if(parts.length>1){
+					int arg = Integer.parseInt(parts[1],16);}
 			} catch (NumberFormatException e) {
 				errors.add("Error: line " + lineNum 
 						+ " does not have a numeric argument");
