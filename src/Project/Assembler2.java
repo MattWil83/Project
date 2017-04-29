@@ -129,9 +129,9 @@ public class Assembler2 {
 		outtext.add("-1");
 
 		for(int i=0; i<data.size(); i++){
-			int lineNum = i+code.size()+1;
+			int lineNum = i+code.size()+2;
 			String[] parts = data.get(i).trim().split("\\s+");
-			if(parts.length!=2){
+			if(parts.length!=2 && data.get(i).trim().length()>0){
 				errors.add("Error: line " + lineNum + " has the wrong number of arguments");
 			} 
 			try {
