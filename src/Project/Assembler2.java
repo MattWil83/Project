@@ -64,7 +64,9 @@ public class Assembler2 {
 		for(int i=0; i<code.size(); i++){ 
 			String[] parts = code.get(i).trim().split("\\s+");
 			int lineNum = i; //they want us to "get the lineNum from inText... I'd hope that's the same as the index of code...
-			if(InstructionMap.sourceCodes.contains(parts[0].toUpperCase())
+			if(!InstructionMap.sourceCodes.contains(parts[0])){
+				errors.add("Error: line " + lineNum + " illegal mnemonic");
+			} else if(InstructionMap.sourceCodes.contains(parts[0].toUpperCase())
 					&& !InstructionMap.sourceCodes.contains(parts[0])){
 				errors.add("Error: line " + lineNum + " does not have the instruction mnemonic in upper case");
 			} else if(InstructionMap.noArgument.contains(parts[0]) && !(parts.length==1)){
@@ -81,40 +83,41 @@ public class Assembler2 {
 						} else if(!parts[1].endsWith("]")){
 							errors.add("Error: line " + lineNum + " is missing a closing bracket");
 						}
-						parts[1]=parts[1].substring(1, parts[1].length());
-					}
-					if(parts[1].endsWith("]")){
-						parts[1]=parts[1].substring(0, parts[1].length()-1);
 					}
 				}
 			}
-			int arg; 
-			try {
-				if(parts.length>1){
-					arg = Integer.parseInt(parts[1],16);}
-			} catch (NumberFormatException e) {
-				errors.add("Error: line " + lineNum 
-						+ " does not have a numeric argument");
-			} 
-			//------------PUT OTHER ERRORS HERE (IF ANY)-----------
-			int lvl=0;
-			if(parts.length==2){
-				lvl=1;
-				if(parts[1].startsWith("[")){
-					lvl=2;
-					parts[1]=parts[1].substring(1, parts[1].length()-1);}}
-			//hope this^^ is alright - not entirely sure if they want us
-			// to account for when there's only one "[]" instead of both...
-			if(parts[0].endsWith("I")){
-				lvl=0;}
-			else if(parts[0].endsWith("A")){
-				lvl=3;}
-			int opcode = InstructionMap.opcode.get(parts[0]);
-			if(parts.length==1)
-				outtext.add(Integer.toHexString(opcode).toUpperCase() + " 1 0");
-			if(parts.length==2)
-				outtext.add(Integer.toHexString(opcode).toUpperCase() + " " + lvl + " " + parts[1]);
-
+			if(parts.length>0){
+				//get level
+				int lvl=0;
+				if(parts.length==2){
+					lvl=1;
+					if(parts[1].startsWith("[")){
+						lvl=2;
+						parts[1]=parts[1].substring(1, parts[1].length());}
+					if(parts[1].endsWith("]")){
+						parts[1]=parts[1].substring(0, parts[1].length()-1);
+					}}
+				if(parts[0].endsWith("I")){
+					lvl=0;}
+				else if(parts[0].endsWith("A")){
+					lvl=3;}
+				//------------PUT OTHER ERRORS HERE (IF ANY)-----------
+				try {
+					if(parts.length>1){
+						int arg = Integer.parseInt(parts[1],16);}
+				} catch (NumberFormatException e) {
+					errors.add("Error: line " + lineNum 
+							+ " does not have a numeric argument");
+				} 
+				//System.out.println(Arrays.toString(parts));
+				if(InstructionMap.sourceCodes.contains(parts[0])){
+					int opcode = InstructionMap.opcode.get(parts[0]);
+					if(parts.length==1)
+						outtext.add(Integer.toHexString(opcode).toUpperCase() + " 1 0");
+					if(parts.length==2)
+						outtext.add(Integer.toHexString(opcode).toUpperCase() + " " + lvl + " " + parts[1]);
+				}
+			}
 		}
 
 		//DATA SECTION
