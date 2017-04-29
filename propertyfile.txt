@@ -1,4 +1,4 @@
 #File locations
-#Fri Apr 28 14:14:01 EDT 2017
-ExecutableDirectory=/Users/josgood/Project/test files/
-SourceDirectory=/Users/josgood/Project/test files/
+#Sat Apr 29 13:12:17 EDT 2017
+ExecutableDirectory=/Users/josgood/Project/data/
+SourceDirectory=/Users/josgood/Project/data/

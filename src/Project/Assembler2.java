@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Assembler2 {
 	public static void assemble(File input, File output, ArrayList<String> errors){
@@ -20,6 +23,13 @@ public class Assembler2 {
 		} catch (FileNotFoundException e) { 
 			errors.add(0, "Error: Unable to open the input file"); 
 			return;}
+		
+		//to remove blank lines at the end of a file:
+		int ix = inText.size()-1;
+		while(ix>0 && inText.get(ix).trim().length()==0){
+			inText.remove(ix);
+			ix--;
+		}
 
 		for(int i=0; i<inText.size(); i++){
 			if(inText.get(i).trim().length()==0 && i+1<inText.size() &&
@@ -36,11 +46,14 @@ public class Assembler2 {
 			}
 		}
 
+		boolean dataSection = false;
+
 		for(String line : inText){
-			boolean dataSection = false;
 			if(!dataSection){
-				code.add(line.trim());
-				if(line.startsWith("--")) dataSection=true;}
+				if(line.startsWith("--")){
+					dataSection=true;}
+				else{
+					code.add(line.trim());}}
 			else{
 				data.add(line.trim());}
 		}
@@ -67,14 +80,18 @@ public class Assembler2 {
 							errors.add("Error: line " + lineNum + " has an illegal argument for given instruction");
 						} else if(!parts[1].endsWith("]")){
 							errors.add("Error: line " + lineNum + " is missing a closing bracket");
-							parts[1]=parts[1].substring(1, parts[1].length());
 						}
+						parts[1]=parts[1].substring(1, parts[1].length());
+					}
+					if(parts[1].endsWith("]")){
+						parts[1]=parts[1].substring(0, parts[1].length()-1);
 					}
 				}
 			}
 			int arg; 
 			try {
-				arg = Integer.parseInt(parts[1],16);
+				if(parts.length>1){
+					arg = Integer.parseInt(parts[1],16);}
 			} catch (NumberFormatException e) {
 				errors.add("Error: line " + lineNum 
 						+ " does not have a numeric argument");
@@ -90,9 +107,8 @@ public class Assembler2 {
 			// to account for when there's only one "[]" instead of both...
 			if(parts[0].endsWith("I")){
 				lvl=0;}
-			else if(parts[0].endsWith("A"))
-				lvl=3;
-
+			else if(parts[0].endsWith("A")){
+				lvl=3;}
 			int opcode = InstructionMap.opcode.get(parts[0]);
 			if(parts.length==1)
 				outtext.add(Integer.toHexString(opcode).toUpperCase() + " 1 0");

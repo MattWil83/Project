@@ -27,7 +27,7 @@ NOT
 CMPL 100
 CMPZ 100
 HALT
-
-    
-	
-
+----
+1	2
+EE FF
+F1   C33
