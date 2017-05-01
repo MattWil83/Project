@@ -93,7 +93,7 @@ public class MachineModel {
 				IMAP.get(0x6).execute(memory.getData(cpu.getMemBase()+arg), level-1);} 
 			else {
 				if(arg==0)
-					throw new DivideByZeroException("Cannot Divide By Zero");
+					throw new DivideByZeroException("Divide By Zero");
 				cpu.setAccum(cpu.getAccum() / arg);
 				cpu.incrPC();}});
 		//AND
@@ -276,7 +276,7 @@ public class MachineModel {
 			int pc = cpu.getpCounter();
 			if(pc<currentJob.getStartcodeIndex() ||
 					pc>=currentJob.getStartcodeIndex()+currentJob.getCodeSize()){
-				throw new CodeAccessException("Program Counter is out of bounds");
+				throw new CodeAccessException("Illegal access outside of executing code");
 			}
 			int opcode = Code.getOp(pc);
 			int arg = Code.getArg(pc);

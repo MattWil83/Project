@@ -92,7 +92,7 @@ public class GUIMediator extends Observable{
 			} catch (ArrayIndexOutOfBoundsException e){
 				JOptionPane.showMessageDialog(
 						frame, 
-						"Illegal access to data" + "\n"
+						"Illegal access to data from line " + model.getpCounter() + "\n"
 								+ "Exception message: " + e.getMessage(),
 								"Run time error",
 								JOptionPane.OK_OPTION);
@@ -113,7 +113,7 @@ public class GUIMediator extends Observable{
 			} catch (DivideByZeroException e){
 				JOptionPane.showMessageDialog(
 						frame, 
-						"Illegal access to code " + model.getpCounter() + "\n"
+						"Divide by zero from line " + model.getpCounter() + "\n"
 								+ "Exception message: " + e.getMessage(),
 								"Divide by zero error",
 								JOptionPane.OK_OPTION);
@@ -138,7 +138,7 @@ public class GUIMediator extends Observable{
 			} catch (ArrayIndexOutOfBoundsException e){
 				JOptionPane.showMessageDialog(
 						frame, 
-						"Illegal access to data" + "\n"
+						"Illegal access to data from line " + model.getpCounter() + "\n"
 								+ "Exception message: " + e.getMessage(),
 								"Run time error",
 								JOptionPane.OK_OPTION);
