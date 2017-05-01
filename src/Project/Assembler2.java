@@ -116,10 +116,10 @@ public class Assembler2 {
 				//System.out.println(Arrays.toString(parts));
 				if(InstructionMap.sourceCodes.contains(parts[0])){
 					int opcode = InstructionMap.opcode.get(parts[0]);
-					if(parts.length==1)
-						outtext.add(Integer.toHexString(opcode).toUpperCase() + " 1 0");
-					if(parts.length==2)
-						outtext.add(Integer.toHexString(opcode).toUpperCase() + " " + lvl + " " + parts[1]);
+					if(parts.length==1){
+						outtext.add(Integer.toHexString(opcode).toUpperCase() + " 0 0");}
+					else if(parts.length==2){
+						outtext.add(Integer.toHexString(opcode).toUpperCase() + " " + lvl + " " + parts[1]);}
 				}
 			}
 		}
