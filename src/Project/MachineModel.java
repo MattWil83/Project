@@ -186,10 +186,6 @@ public class MachineModel {
 			else if(level > 0){
 				IMAP.get(0xC).execute(memory.getData(cpu.getMemBase()+arg), level-1);
 			}
-			else if(level == 0){
-				int arg1 = memory.getData(cpu.getMemBase()+arg);
-				cpu.setpCounter(arg1 + currentJob.getStartcodeIndex());
-			}
 			else{
 				if(cpu.getAccum()==0){
 					cpu.setpCounter(cpu.getpCounter()+arg);}
