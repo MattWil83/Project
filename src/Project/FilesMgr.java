@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -140,10 +142,30 @@ public class FilesMgr {
 							"Success",
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					Collections.sort(errors);
+					Map<Integer, ArrayList<String>> errorMap = new TreeMap<>();
+					System.out.println(errors);
+					for (String err : errors) {
+						String part = err.substring(14);   // Remove "Error on line"
+						//System.out.println(part);        // debug print line
+						int i = part.indexOf('.');         // find a period or
+						int j = part.indexOf(':');         // a colon, if both tind
+						if(i > 0 && j > 0) i = Math.min(i, j);  // the first one but if
+						else if (j > 0) i = j;             // there was no period, use the colon
+						part = part.substring(0, i).trim(); // remove all except the number
+						// System.out.println(part);       // debug print line
+						Integer k = Integer.parseInt(part);
+						if(!errorMap.containsKey(k)) {      // make sure there is a list in the map
+							errorMap.put(Integer.parseInt(part), new ArrayList<>());
+						}
+						errorMap.get(k).add(err);           // store the error
+					}
 					StringBuilder sb = new StringBuilder();
-					for(String s : errors) {
-						sb.append(s); sb.append("\n");
+					for(Integer key : errorMap.keySet()) {  // the keys will be in increasing order
+						ArrayList<String> list = errorMap.get(key);
+						for(String s : list) {
+							sb.append(s); 
+							sb.append("\n");  
+						}
 					}
 					JOptionPane.showMessageDialog(
 							gui.getFrame(), 
