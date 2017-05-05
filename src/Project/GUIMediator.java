@@ -245,11 +245,12 @@ public class GUIMediator extends Observable{
 	}
 
 	public void clearJob(){
+		int codeSize = model.getCurrentJob().getCodeSize();
 		model.clearJob();
 		model.setCurrentState(States.NOTHING_LOADED);
 		model.getCurrentState().enter();
 		setChanged();
-		notifyObservers("Clear");
+		notifyObservers("Clear " + codeSize); // NOTE the space in "Clear "
 	}
 
 	public void makeReady(String s){

@@ -23,42 +23,42 @@ public class CodeViewPanel implements Observer{
 		this.model = mdl;
 		gui.addObserver(this);
 	}
-	
+
 	JComponent createCodeDisplay(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),
 				"Code Memory View");
 		panel.setBorder(border);
-		
+
 		JPanel innerPanel = new JPanel();
 		JPanel numPanel = new JPanel();
 		JPanel textPanel = new JPanel();
 		JPanel hexPanel = new JPanel();
-		
+
 		innerPanel.setLayout(new BorderLayout());
 		numPanel.setLayout(new GridLayout(0,1));
 		textPanel.setLayout(new GridLayout(0,1));
 		hexPanel.setLayout(new GridLayout(0,1));
-		
+
 		innerPanel.add(numPanel, BorderLayout.LINE_START);
 		innerPanel.add(textPanel, BorderLayout.CENTER);
 		innerPanel.add(hexPanel, BorderLayout.LINE_END);
-		
+
 		for(int i=0; i <Code.CODE_MAX; i++){
-			
+
 			numPanel.add(new JLabel(i+": ", JLabel.RIGHT));
 			codeHex[i] = new JTextField(10);
 			codeText[i] = new JTextField(10);
 			textPanel.add(codeText[i]);
 			hexPanel.add(codeHex[i]);
 		}
-		
+
 		scroller = new JScrollPane(innerPanel);
 		panel.add(scroller);
 		return panel;
 	}
-	
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(arg1 != null && arg1.equals("Load Code")) {
@@ -72,19 +72,14 @@ public class CodeViewPanel implements Observer{
 			previousColor = model.getpCounter();			
 			codeHex[previousColor].setBackground(Color.YELLOW);
 			codeText[previousColor].setBackground(Color.YELLOW);
-		} else if(arg1 != null && arg1.equals("Clear")) {
+		} else if(arg1 != null && arg1 instanceof String && ((String)arg1).startsWith("Clear")) {
 			int offset = model.getCurrentJob().getStartcodeIndex();
+			int codeSize = Integer.parseInt(((String)arg1).substring(6).trim());
 			for(int i = offset; 
-				i < offset + model.getCurrentJob().getCodeSize(); i++) {
-			if(code == null) {
+					i < offset + codeSize; i++) {
 				codeText[i].setText("");
 				codeHex[i].setText("");
-			}
-			else {
-				codeText[i].setText(code.getText(i));
-				codeHex[i].setText(code.getHex(i));
-			}
-		}	
+			}	
 			if(previousColor >= 0 && previousColor < Code.CODE_MAX) {
 				codeText[previousColor].setBackground(Color.WHITE);
 				codeHex[previousColor].setBackground(Color.WHITE);
