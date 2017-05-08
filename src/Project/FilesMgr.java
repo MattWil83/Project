@@ -143,21 +143,12 @@ public class FilesMgr {
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					Map<Integer, ArrayList<String>> errorMap = new TreeMap<>();
-					System.out.println(errors);
 					for (String err : errors) {
-						String part = err.substring(14);   // Remove "Error on line"
-						//System.out.println(part);        // debug print line
-						int i = part.indexOf('.');         // find a period or
-						int j = part.indexOf(':');         // a colon, if both tind
-						if(i > 0 && j > 0) i = Math.min(i, j);  // the first one but if
-						else if (j > 0) i = j;             // there was no period, use the colon
-						part = part.substring(0, i).trim(); // remove all except the number
-						// System.out.println(part);       // debug print line
+						String part = err.replaceAll("^[^\\d]*(\\d+).*$", "$1");					
 						Integer k = Integer.parseInt(part);
-						if(!errorMap.containsKey(k)) {      // make sure there is a list in the map
-							errorMap.put(Integer.parseInt(part), new ArrayList<>());
-						}
-						errorMap.get(k).add(err);           // store the error
+						if(!errorMap.containsKey(k)) 
+							errorMap.put(Integer.parseInt(part), new ArrayList<>());							
+						errorMap.get(k).add(err);
 					}
 					StringBuilder sb = new StringBuilder();
 					for(Integer key : errorMap.keySet()) {  // the keys will be in increasing order
