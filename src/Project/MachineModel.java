@@ -28,6 +28,7 @@ public class MachineModel {
 			jobs[i].setId(i);
 			jobs[i].setStartcodeIndex(i*Code.CODE_MAX/4);
 			jobs[i].setStartmemoryIndex(i*Memory.DATA_SIZE/4);
+			jobs[i].getCurrentState().enter();
 		}
 
 		//NOP
