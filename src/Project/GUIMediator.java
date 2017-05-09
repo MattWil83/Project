@@ -284,7 +284,6 @@ public class GUIMediator extends Observable{
 		model.changeToJob(i);
 		if(model.getCurrentState()!=null){
 			model.getCurrentState().enter();
-			//System.out.println(model.getCurrentState());
 			setChanged();
 			notifyObservers();
 		}

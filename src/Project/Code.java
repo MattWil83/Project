@@ -3,7 +3,17 @@ package Project;
 public class Code {
 	public static final int CODE_MAX=1024;
 	private long[] code=new long[CODE_MAX];
-
+	
+	/*
+	public String getFullText(){
+		String retStr = "";
+		for(int i=0; i<code.length; i++){
+			retStr += getText(i) + "\n";
+		}
+		retStr += "----------";
+		return retStr;
+	}
+	*/
 
 	public void setCode(int index, int op, int indirLvl, int arg) {
 		// the opcode will use 29 bits, multiplying by
@@ -23,8 +33,9 @@ public class Code {
 
 
 	public void clear(int start, int length){
-		for(int i=0;i<code.length;i++)
-			code[i]=0;
+		for(int i=start;i<start+length-1;i++){
+			code[i]=0L;
+		}
 	}
 
 	int getOp(int i) {

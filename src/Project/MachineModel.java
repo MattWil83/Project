@@ -264,7 +264,7 @@ public class MachineModel {
 
 	public void clearJob(){
 		memory.clear(currentJob.getStartmemoryIndex(), 
-				currentJob.getStartmemoryIndex()+Memory.DATA_SIZE/4);
+				currentJob.getCodeSize());
 		Code.clear(currentJob.getStartcodeIndex(),
 				currentJob.getStartcodeIndex()+currentJob.getCodeSize());
 		cpu.setAccum(0);
@@ -281,7 +281,7 @@ public class MachineModel {
 			}
 			int opcode = Code.getOp(pc);
 			int arg = Code.getArg(pc);
-			int indirLvl = Code.getIndirLvl(pc);			
+			int indirLvl = Code.getIndirLvl(pc);	
 			get(opcode).execute(arg, indirLvl);
 		} catch(Exception e){
 			callback.halt();
@@ -294,6 +294,8 @@ public class MachineModel {
 			throw new IllegalArgumentException("illegal argument for changing jobs");
 		}
 		if(i!=currentJob.getId()){
+			//System.out.println("changing jobs now");
+			//System.out.println(getCode().getFullText());
 			currentJob.setCurrentAcc(cpu.getAccum());
 			currentJob.setCurrentPC(cpu.getpCounter());
 			currentJob = jobs[i];
