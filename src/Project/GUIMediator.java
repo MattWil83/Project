@@ -268,6 +268,7 @@ public class GUIMediator extends Observable{
 		}else{
 			model.setCurrentState(States.PROGRAM_LOADED_NOT_AUTOSTEPPING);
 		}
+		//System.out.println(model.getCurrentState());
 		model.getCurrentState().enter();
 		setChanged();
 		notifyObservers();
@@ -283,6 +284,7 @@ public class GUIMediator extends Observable{
 		model.changeToJob(i);
 		if(model.getCurrentState()!=null){
 			model.getCurrentState().enter();
+			//System.out.println(model.getCurrentState());
 			setChanged();
 			notifyObservers();
 		}
